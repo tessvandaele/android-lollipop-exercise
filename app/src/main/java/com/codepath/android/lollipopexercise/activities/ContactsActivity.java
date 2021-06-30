@@ -3,6 +3,7 @@ package com.codepath.android.lollipopexercise.activities;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codepath.android.lollipopexercise.R;
 import com.codepath.android.lollipopexercise.adapters.ContactsAdapter;
 import com.codepath.android.lollipopexercise.models.Contact;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -61,7 +63,30 @@ public class ContactsActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if(id == R.id.miAdd){
+            Contact contact = Contact.getRandomContact(this);
+            contacts.add(0, contact);
+            mAdapter.notifyDataSetChanged();
+            rvContacts.smoothScrollToPosition(0);
+            Snackbar.make(rvContacts, "Contact Added", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", myOnClickListener)
+                    .show();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    // Define the click listener as a member
+    View.OnClickListener myOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            // remove contact at position 0
+            contacts.remove(0);
+            mAdapter.notifyDataSetChanged();
+            rvContacts.smoothScrollToPosition(0);
+        }
+    };
+
 }
